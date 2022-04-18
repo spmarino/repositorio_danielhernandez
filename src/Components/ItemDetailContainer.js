@@ -1,46 +1,38 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import ItemDetail from "./ItemDetail";
-import {useParams} from 'react-router-dom'  
+import { db } from "./Firebase";
+import { collection, where, query, getDocs } from "firebase/firestore";
 
 
-let detalleProducto = [
-  { indice: 1, nombre: "producto1", precio: 100, categoria: 1 },
-  { indice: 2, nombre: "producto2", precio: 200, categoria: 2 },
-  { indice: 3, nombre: "producto3", precio: 300, categoria: 3 },
-];
 
 const ItemDetailContainer = () => {
   const [loading, setLoading] = useState(true);
-  const [productos, setProductos] = useState([]);
-  const {id} = useParams()
+  const [item, setItem] = useState([]);
+  const { id } = useParams();
+
+  console.log(id);
 
   useEffect(() => {
-    const promesa = new Promise((res, rej) => {
-      setTimeout(() => {
-        res(detalleProducto);
-      }, 1000);
-    });
+    const productosCollection = collection(db, "productos");
+    const miFiltro = query(productosCollection, where("id", "==", Number(id)));
+    const documentos = getDocs(miFiltro);
 
-    promesa
-      .then((respuestaApi) => {
-        setProductos(respuestaApi.find(producto => producto.indice == +id));
-      })
-      .catch((errorApi) => {
-        toast.error("Error al cargar el detalle");
-      })
-
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+    documentos
+      .then((respuesta) => setItem(respuesta.docs.map((doc) => doc.data())[0]))
+      .catch((errorApi) => toast.error("Error al cargar el detalle"))
+      .finally(() => setLoading(false));
+    
+  }, [id]);
 
   return (
     <div className="detalle">
       <p>{loading ? "Cargando..." : "Ya tenes el detalle del producto"}</p>
-      <ItemDetail productos={productos} />
+      <ItemDetail key={item.id} productos={item} />
     </div>
   );
 };
 
 export default ItemDetailContainer;
+

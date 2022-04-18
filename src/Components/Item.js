@@ -5,10 +5,12 @@ const Item = ({ producto }) => {
     <>
       <article>
         <h2>{producto.nombre}</h2>
+        <img src={producto.imagen} />
         <p> Precio:${producto.precio}</p>
         <button>
-          <Link to={`/elemento/${producto.indice}`}>Ver detalle</Link>
+          <Link to={`/elemento/${producto.id}`}>Ver detalle</Link>
         </button>
+        {console.log(producto)}
       </article>
     </>
   );

@@ -4,9 +4,9 @@ import CartWidget from "./CartWidget";
 const NavBar = () => {
   return (
     <nav>
-      <NavLink to="/division/1">Discos</NavLink>
-      <NavLink to="/division/2">Remeras</NavLink>
-      <NavLink to="/division/3">Shorts</NavLink>
+      <NavLink to="/division/indumentaria">Discos</NavLink>
+      <NavLink to="/division/elementos">Remeras</NavLink>
+      <NavLink to="/division/objetos">Shorts</NavLink>
       <NavLink to="/carrito">Carrito</NavLink>
       <CartWidget />
     </nav>
